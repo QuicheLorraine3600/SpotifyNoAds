@@ -1,0 +1,4 @@
+1. Uninstall Spotify
+2. Run "setup_hosts.bat" (it will prompt admin permissions)
+3. If you get a success message, go to "SpotifyFolder" and run "SpotifyLauncher.exe"
+4. A donation is always welcome (even $ 0.01) https://paypal.me/KyloRen3600 !

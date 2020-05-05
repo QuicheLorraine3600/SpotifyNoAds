@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:rescap3="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities/3" IgnorableNamespaces="desktop2 rescap3" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
+  <!--
+    The 'desktop2' and 'rescap3' namespaces are marked as ignorable above,
+    since they are only available with the Windows 10 "Creators Update",
+    but we want to be able to target the Windows 10 "Anniversary Update".
+  -->
+  <Identity Name="SpotifyAB.SpotifyMusic" Version="1.80.474.0" ProcessorArchitecture="x86" Publisher="CN=453637B3-4E12-4CDF-B0D3-2A3C863BF6EF" />
+  <Properties>
+    <DisplayName>Spotify Music</DisplayName>
+    <PublisherDisplayName>Spotify AB</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-US" />
+    <Resource uap:Scale="100" />
+    <Resource uap:Scale="125" />
+    <Resource uap:Scale="150" />
+    <Resource uap:Scale="200" />
+    <Resource uap:Scale="400" />
+  </Resources>
+  <Dependencies>
+    <!-- See: https://docs.microsoft.com/en-us/windows/uwp/porting/desktop-to-uwp-known-issues#blue-screen-with-error-code-0x139-kernelsecuritycheckfailure -->
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.351" MaxVersionTested="10.0.15063.0" />
+  </Dependencies>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+  <Extensions>
+    <Extension Category="windows.activatableClass.inProcessServer">
+      <InProcessServer>
+        <Path>LiveTileUpdater.dll</Path>
+        <ActivatableClass ActivatableClassId="LiveTileUpdater.LiveTileUpdater" ThreadingModel="both" />
+      </InProcessServer>
+    </Extension>
+    <!--
+      In order to pass manifest validation 'Extensions' can't be empty, which is why we
+      add a non-namespaced dummy "windows.certificates" extension here. This is required,
+      because the 'desktop2:Extension' is ignored before the Windows 10 "Creators Update".
+    -->
+    <Extension Category="windows.certificates">
+      <Certificates />
+    </Extension>
+    <!-- See: https://docs.microsoft.com/en-us/windows/uwp/porting/desktop-to-uwp-extensions -->
+    <desktop2:Extension Category="windows.firewallRules">
+      <desktop2:FirewallRules Executable="Spotify.exe">
+        <!-- Allow incoming TCP traffic for "Local RPC" HTTPS and HTTP port ranges. -->
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="4371" LocalPortMax="4379" Profile="all" />
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="4381" LocalPortMax="4389" Profile="all" />
+        <!-- Allow incoming TCP and UDP traffic on default "Chrome Remote Debugging" port. -->
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="8088" LocalPortMax="8088" Profile="all" />
+        <desktop2:Rule Direction="in" IPProtocol="UDP" LocalPortMin="8088" LocalPortMax="8088" Profile="all" />
+        <!-- Allow incoming UDP traffic on default "Local File Sync Discovery" port. -->
+        <desktop2:Rule Direction="in" IPProtocol="UDP" LocalPortMin="57621" LocalPortMax="57621" Profile="all" />
+        <!-- Allow incoming TCP traffic on default "Local File Sync" ports. -->
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="57621" LocalPortMax="57631" Profile="all" />
+        <!-- Allow all outgoing TCP and UDP traffic. -->
+        <desktop2:Rule Direction="out" IPProtocol="TCP" Profile="all" />
+        <desktop2:Rule Direction="out" IPProtocol="UDP" Profile="all" />
+      </desktop2:FirewallRules>
+    </desktop2:Extension>
+    <desktop2:Extension Category="windows.firewallRules">
+      <desktop2:FirewallRules Executable="SpotifyWebHelper.exe">
+        <!-- Allow incoming TCP traffic for "Web Helper" HTTPS and HTTP ports. -->
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="4370" LocalPortMax="4370" Profile="all" />
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="4380" LocalPortMax="4380" Profile="all" />
+      </desktop2:FirewallRules>
+    </desktop2:Extension>
+  </Extensions>
+  <Applications>
+    <!-- The main entry point is the migrator, which will either start migration or launch the app. -->
+    <Application Id="Spotify" Executable="SpotifyMigrator.exe" EntryPoint="Windows.FullTrustApplication">
+      <!-- The BackgroundColor property needs to match the background of Square44x44Logo.
+           It's used as a mandatory padding around the icon. -->
+      <uap:VisualElements AppListEntry="default" BackgroundColor="#1ed760" Description="Spotify" DisplayName="Spotify" Square44x44Logo="Assets\Square44x44Logo.png" Square150x150Logo="Assets\Square150x150Logo.png">
+        <uap:DefaultTile ShortName="Spotify" Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" Wide310x150Logo="Assets\Wide310x150Logo.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
+          <uap:TileUpdate Recurrence="halfHour" UriTemplate="https://spclient.wg.spotify.com/v1/live-tile-xml?region={region}&amp;language={language}" />
+        </uap:DefaultTile>
+      </uap:VisualElements>
+      <Extensions>
+        <Extension Category="windows.backgroundTasks" EntryPoint="LiveTileUpdater.LiveTileUpdater">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
+        <uap3:Extension Category="windows.protocol">
+          <uap3:Protocol Name="spotify" Parameters="--uri=&quot;%1&quot;" />
+        </uap3:Extension>
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="SpotifyMigrator.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="Spotify.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+        <desktop:Extension Category="windows.startupTask" Executable="SpotifyWebHelper.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="SpotifyWebHelper" Enabled="true" DisplayName="Spotify Web Helper" />
+        </desktop:Extension>
+        <!-- When launched as a startup task, use a launcher, so we can pass the autostart flag. -->
+        <desktop:Extension Category="windows.startupTask" Executable="SpotifyStartupTask.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="Spotify" Enabled="true" DisplayName="Spotify" />
+        </desktop:Extension>
+        <!-- See: https://docs.microsoft.com/en-us/windows/uwp/porting/desktop-to-uwp-extensions -->
+        <rescap3:Extension Category="windows.desktopAppMigration">
+          <rescap3:DesktopAppMigration>
+            <rescap3:DesktopApp ShortcutPath="%USERPROFILE%\Desktop\Spotify.lnk" />
+            <rescap3:DesktopApp ShortcutPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Spotify.lnk" />
+            <rescap3:DesktopApp ShortcutPath="%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Spotify.lnk" />
+          </rescap3:DesktopAppMigration>
+        </rescap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <mp:PhoneIdentity PhoneProductId="caac1b9d-621b-4f96-b143-e10e1397740a" PhonePublisherId="6a5aab88-e163-4308-a5f2-5ed7f9510a2d" />
+</Package>

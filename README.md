@@ -9,12 +9,12 @@ You block Spotify ads by blocking ad servers on your computer using a file calle
 ## Installation
 
 1. Uninstall Spotify
-2. Run "setup_hosts_admin.bat" (it run "setup_hosts.bat" with admin permissions)
+2. Run "setup_hosts.bat" (it will prompt admin permissions)
 3. If you get a success message, go to "SpotifyFolder" and run "SpotifyLauncher.exe"
 
 ## Is that safe ?
 
-Changing hosts file is totally safe, however it break access to some servers what can break some apps/websites (like Spotify Web Version at [http://open.spotify.com/](http://open.spotify.com/). Your totally free to remove hosts by launching "remove_hosts_admin.bat" (it run "remove_hosts.bat" with admin permissions). The Spotify version in the "Spotify" folder comes from Windows Store and was just never updated (because of the patch of this "trick" in newest versions)
+Changing hosts file is totally safe, however it break access to some servers what can break some apps/websites (like Spotify Web Version at [http://open.spotify.com/](http://open.spotify.com/). Your totally free to remove hosts by launching "remove_hosts.bat" (it will prompt admin permissions). The Spotify version in the "Spotify" folder comes from Windows Store and was just never updated (because of the patch of this "trick" in newest versions)
 
 ## Donate !
 

@@ -16,7 +16,7 @@ You block Spotify ads by blocking ad servers on your computer using a file calle
 
 ## Is that safe ?
 
-Changing hosts file is totally safe, however it break access to some servers what can break some apps/websites (like Spotify Web Version at [http://open.spotify.com/](http://open.spotify.com/). Your totally free to remove hosts by launching "remove_hosts.bat" (it will prompt admin permissions). The Spotify version in the "Spotify" folder comes from Windows Store and was just never updated (because of the patch of this "trick" in newest versions)
+Changing hosts file is totally safe, however it break access to some servers what can break some apps/websites (like Spotify Web Version at [http://open.spotify.com/](http://open.spotify.com/). You're totally free to remove hosts by launching "remove_hosts.bat" (it will prompt admin permissions). The Spotify version in the "Spotify" folder comes from Windows Store and was just never updated (because of the patch of this "trick" in newest versions)
 
 ## Donate !
 

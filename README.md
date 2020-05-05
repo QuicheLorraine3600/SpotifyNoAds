@@ -8,9 +8,11 @@ You block Spotify ads by blocking ad servers on your computer using a file calle
 
 ## Installation
 
-1. Uninstall Spotify
-2. Run "setup_hosts.bat" (it will prompt admin permissions)
-3. If you get a success message, go to "SpotifyFolder" and run "SpotifyLauncher.exe"
+1. Download archive https://github.com/KyloRen3600/SpotifyNoAds/archive/1.0.zip
+2. Extract archive in a folder
+3. Uninstall Spotify
+4. Run "setup_hosts.bat" (it will prompt admin permissions)
+5. If you get a success message, go to "SpotifyFolder" and run "SpotifyLauncher.exe"
 
 ## Is that safe ?
 
